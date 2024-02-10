@@ -1,5 +1,8 @@
 {
   "item.vortex.manipulator": "Vortex Manipulator",
   "category.vortex": "Vortex Manipulator",
-  "key.vortex.teleport": "Teleport"
+  "key.vortex.teleport": "Teleport",
+  "screen.vortex.create_waypoint": "Create Waypoint",
+  "screen.vortex.name_box": "Name",
+  "screen.vortex.confirm": "Confirm"
 }

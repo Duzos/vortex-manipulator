@@ -1,8 +1,5 @@
-# 1.0.0 Beta
-- Initial beta
-- Added  a basic vortex manipulator
-- Only obtainable through /give
-- Missing textures + models
-- Press "B" to teleport to selected waypoint
-- Shift use to add waypoint
-- Use to select next waypoint
+# 1.0.1 Beta
+- Added particle effects when used
+- Added sounds when used
+- Added a screen for creating waypoints
+- Added a screen for removing a waypoint when you're over the limit

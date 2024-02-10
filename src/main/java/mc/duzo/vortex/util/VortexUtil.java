@@ -1,19 +1,18 @@
 package mc.duzo.vortex.util;
 
 import mc.duzo.vortex.item.VortexManipulatorItem;
+import net.minecraft.command.argument.SwizzleArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.Text;
+import org.joml.Math;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +52,6 @@ public class VortexUtil {
 
         if (hasWaypoint(stack, waypoint)) return;
 
-        if (findWaypoints(stack).size() + 1 > MAX_WAYPOINTS) {
-            removeWaypoint(stack, findWaypoints(stack).get(0));
-        }
-
         nbt.getList(WAYPOINTS_KEY, NbtElement.COMPOUND_TYPE).add(waypoint.toNbt());
     }
 
@@ -75,9 +70,25 @@ public class VortexUtil {
         return waypoints.contains(waypoint);
     }
 
-    public static int findPosition(ItemStack stack, Waypoint waypoint) {
+    public static int findIndex(ItemStack stack, Waypoint waypoint) {
         List<Waypoint> waypoints = findWaypoints(stack);
         return waypoints.indexOf(waypoint);
+    }
+
+    /**
+     * Finds a waypoint based off its name, this should be used with caution as waypoints can have the same name
+     */
+    public static @Nullable Waypoint findByName(ItemStack stack, String name) {
+        Waypoint found = null;
+
+        for (Waypoint point : findWaypoints(stack)) {
+            if (point.name().equals(name)) {
+                found = point;
+                break;
+            }
+        }
+
+        return found;
     }
 
     public static @Nullable Waypoint getSelectedWaypoint(ItemStack stack) {
@@ -100,7 +111,7 @@ public class VortexUtil {
     public static void setSelectedWaypoint(ItemStack stack, Waypoint waypoint) {
         NbtCompound nbt = stack.getOrCreateNbt();
 
-        nbt.putInt(SELECTED_KEY, findPosition(stack, waypoint));
+        nbt.putInt(SELECTED_KEY, findIndex(stack, waypoint));
     }
     public static Waypoint getNextWaypoint(ItemStack stack, Waypoint current) {
         List<Waypoint> waypoints = findWaypoints(stack);
@@ -129,7 +140,40 @@ public class VortexUtil {
 
         return Optional.ofNullable(found);
     }
+
     public static void teleportToWaypoint(ServerPlayerEntity player, Waypoint waypoint) {
-        WorldUtil.teleportToWorld(player, (ServerWorld) waypoint.getWorld(), waypoint.toCenterPos(), waypoint.getDirection().asRotation(), player.getPitch());
+        WorldUtil.teleportToWorld(player, (ServerWorld) waypoint.getWorld(), waypoint.toCenterPos().subtract(0, 0.5, 0), waypoint.getDirection().asRotation(), player.getPitch());
+    }
+
+    /**
+     * Creates a spiral of particles around the player
+     */
+    public static void createTeleportEffect(ServerWorld world, Vec3d source) {
+        double b = Math.PI / 8;
+
+        Vec3d pos;
+        double x;
+        double y;
+        double z;
+
+        for(double t = 0.0D; t <= Math.PI * 2; t += Math.PI / 16) {
+            for (int i = 0; i <= 1; i++) {
+                x = 0.4D * (Math.PI * 2 - t) * 0.5D * Math.cos(t + b + i * Math.PI);
+                y = 0.5D * t;
+                z = 0.4D * (Math.PI * 2 - t) * 0.5D * Math.sin(t + b + i * Math.PI);
+                pos = source.add(x, y, z);
+
+                world.spawnParticles(ParticleTypes.DRAGON_BREATH, pos.getX(), pos.getY(), pos.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.0D);
+            }
+        }
+    }
+
+    public static boolean validateWaypoints(ServerPlayerEntity user, ItemStack stack) {
+        List<Waypoint> waypoints = findWaypoints(stack);
+
+        if (!(waypoints.size() > MAX_WAYPOINTS)) return false;
+
+        VortexMessages.sendOpenScreen(user, 1);
+        return true;
     }
 }

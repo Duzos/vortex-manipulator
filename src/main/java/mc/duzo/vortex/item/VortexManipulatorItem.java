@@ -1,5 +1,6 @@
 package mc.duzo.vortex.item;
 
+import mc.duzo.vortex.util.VortexMessages;
 import mc.duzo.vortex.util.VortexUtil;
 import mc.duzo.vortex.util.Waypoint;
 import net.minecraft.client.item.TooltipContext;
@@ -7,6 +8,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -26,10 +29,10 @@ public class VortexManipulatorItem extends Item {
         ItemStack stack = user.getStackInHand(hand);
 
         if (!world.isClient()) {
+            if (VortexUtil.validateWaypoints((ServerPlayerEntity) user, stack)) return TypedActionResult.pass(stack);
+
             if (user.isSneaking()) {
-                Waypoint waypoint = Waypoint.fromEntity(user);
-                VortexUtil.addWaypoint(stack, waypoint);
-                VortexUtil.setSelectedWaypoint(stack, waypoint);
+                VortexMessages.sendOpenScreen((ServerPlayerEntity) user, 0);
                 return TypedActionResult.success(stack);
             }
 
@@ -38,6 +41,12 @@ public class VortexManipulatorItem extends Item {
 
             Waypoint next = VortexUtil.getNextWaypoint(stack, current);
             VortexUtil.setSelectedWaypoint(stack, next);
+
+            user.sendMessage(Text.literal(next.name()).formatted(Formatting.AQUA), true);
+
+            world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.AMBIENT, 1, 2);
+
+            user.getItemCooldownManager().set(stack.getItem(), 1 * 20);
 
             return TypedActionResult.success(stack);
         }
@@ -63,7 +72,7 @@ public class VortexManipulatorItem extends Item {
 
         for (Waypoint point : waypoints) {
             Formatting format = (VortexUtil.isSelectedWaypoint(stack, point)) ? Formatting.AQUA : Formatting.BLUE;
-            tooltip.add(Text.literal("> " + point.toShortString()).formatted(format));
+            tooltip.add(Text.literal("> " + ((point.hasName()) ? point.name() : point.toString())).formatted(format));
         }
 
         super.appendTooltip(stack, world, tooltip, context);

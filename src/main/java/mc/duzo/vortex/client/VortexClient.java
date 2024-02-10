@@ -12,6 +12,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,6 +23,8 @@ public class VortexClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         setupKeybinds();
+
+        VortexClientMessages.initialise();
     }
 
     private void setupKeybinds() {
@@ -40,20 +43,18 @@ public class VortexClient implements ClientModInitializer {
         });
     }
 
-    private void tickTeleportKey(ClientPlayerEntity player){
+    private void tickTeleportKey(ClientPlayerEntity player) {
         if (!teleportKey.wasPressed() && wasTeleportHeld) {
             wasTeleportHeld = false;
+            return;
         }
 
         if (wasTeleportHeld || !teleportKey.isPressed()) return;
 
-        wasTeleportHeld = true;
+        wasTeleportHeld = true; // Does not appear to work
 
         if (VortexUtil.findManipulator(player).isEmpty()) return;
 
-        sendTeleportRequest();
-    }
-    private void sendTeleportRequest() {
-        ClientPlayNetworking.send(VortexMessages.REQUEST_TELEPORT, PacketByteBufs.create());
+        VortexClientMessages.sendTeleportRequest();
     }
 }
