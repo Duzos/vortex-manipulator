@@ -1,2 +1,2 @@
-# 1.1.1 Beta
-- Added a recipe
+# 1.0.0
+- Initial release
