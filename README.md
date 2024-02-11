@@ -1,6 +1,6 @@
 # Vortex Manipulator
 
-![GitHub Release](https://img.shields.io/github/v/release/Duzos/vortex-manipulator?include_prereleases)
+![GitHub Release](https://img.shields.io/github/v/release/Duzos/vortex-manipulator)
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/vortex?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fvortex%2Fversions)
 
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/vortex?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fvortex)
