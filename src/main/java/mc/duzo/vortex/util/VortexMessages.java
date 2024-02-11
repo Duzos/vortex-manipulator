@@ -54,6 +54,7 @@ public class VortexMessages {
         selected.getWorld().playSound(null, BlockPos.ofFloored(dest), SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.PLAYERS, 0.5f, 1.0f);
 
         player.getItemCooldownManager().set(found.get().getItem(), 16 * 20);
+        found.get().damage(1, player, p -> p.sendToolBreakStatus(player.getActiveHand()));
     }
 
     public static void sendOpenScreen(ServerPlayerEntity player, int id) {

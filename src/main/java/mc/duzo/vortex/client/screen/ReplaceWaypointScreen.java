@@ -5,20 +5,24 @@ import mc.duzo.vortex.client.VortexClientMessages;
 import mc.duzo.vortex.util.VortexUtil;
 import mc.duzo.vortex.util.Waypoint;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
 public class ReplaceWaypointScreen extends Screen {
+    public static final Identifier EYE_BACKGROUND = new Identifier(VortexMod.MOD_ID, "textures/gui/manipulator.png");
     private static final int backgroundWidth = 256;
-    private static final int backgroundHeight = 128;
+    private static final int backgroundHeight = 256;
     private int buttonCount = 0;
 
     public ReplaceWaypointScreen() {
@@ -41,7 +45,7 @@ public class ReplaceWaypointScreen extends Screen {
         List<Waypoint> waypoints = VortexUtil.findWaypoints(found.get());
 
         for (Waypoint point : waypoints) {
-            this.createTextButton(Text.literal(point.name()), this::onChooseWaypoint);
+            this.createTextButton(Text.literal(point.name()).formatted(Formatting.RED), this::onChooseWaypoint);
         }
     }
 
@@ -62,7 +66,7 @@ public class ReplaceWaypointScreen extends Screen {
         this.addDrawableChild(
                 new PressableTextWidget(
                         (i + backgroundWidth / 2) - (width / 2),
-                        (j + backgroundHeight / 2) - (10 / 2) + (buttonCount * 20) - backgroundHeight / 2,
+                        (j + backgroundHeight / 2) - (10 / 2) + (buttonCount * 20) - (backgroundHeight / 8),
                         width,
                         10,
                         text,
@@ -72,6 +76,16 @@ public class ReplaceWaypointScreen extends Screen {
         );
 
         this.buttonCount++;
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        int i = (this.width - backgroundWidth) / 2;
+        int j = ((this.height) - backgroundHeight) / 2;
+
+        context.drawTexture(EYE_BACKGROUND, i, j, 0, 0, backgroundWidth, backgroundHeight);
+
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

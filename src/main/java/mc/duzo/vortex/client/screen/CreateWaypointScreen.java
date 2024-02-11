@@ -9,9 +9,11 @@ import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
+import static mc.duzo.vortex.client.screen.ReplaceWaypointScreen.EYE_BACKGROUND;
+
 public class CreateWaypointScreen extends Screen {
     private static final int backgroundWidth = 256;
-    private static final int backgroundHeight = 128;
+    private static final int backgroundHeight = 256;
 
     private static final int nameBoxWidth = 128;
     private static final int nameBoxHeight = 20;
@@ -64,6 +66,8 @@ public class CreateWaypointScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         int i = (this.width - backgroundWidth) / 2;
         int j = ((this.height) - backgroundHeight) / 2;
+
+        context.drawTexture(EYE_BACKGROUND, i, j, 0, 0, backgroundWidth, backgroundHeight);
 
         super.render(context, mouseX, mouseY, delta);
     }

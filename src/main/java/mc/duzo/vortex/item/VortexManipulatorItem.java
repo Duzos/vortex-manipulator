@@ -21,7 +21,7 @@ import java.util.List;
 
 public class VortexManipulatorItem extends Item {
     public VortexManipulatorItem(Settings settings) {
-        super(settings.maxCount(1));
+        super(settings.maxDamage(6));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class VortexManipulatorItem extends Item {
             Waypoint next = VortexUtil.getNextWaypoint(stack, current);
             VortexUtil.setSelectedWaypoint(stack, next);
 
-            user.sendMessage(Text.literal(next.name()).formatted(Formatting.AQUA), true);
+            user.sendMessage(Text.literal(next.name()).formatted(Formatting.RED), true);
 
             world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.AMBIENT, 1, 2);
 
@@ -71,7 +71,7 @@ public class VortexManipulatorItem extends Item {
         }
 
         for (Waypoint point : waypoints) {
-            Formatting format = (VortexUtil.isSelectedWaypoint(stack, point)) ? Formatting.AQUA : Formatting.BLUE;
+            Formatting format = (VortexUtil.isSelectedWaypoint(stack, point)) ? Formatting.RED : Formatting.DARK_RED;
             tooltip.add(Text.literal("> " + ((point.hasName()) ? point.name() : point.toString())).formatted(format));
         }
 
