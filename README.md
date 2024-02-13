@@ -4,7 +4,7 @@
 ![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/vortex?link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fvortex%2Fversions)
 
 ![Modrinth Downloads](https://img.shields.io/modrinth/dt/vortex?logo=modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fvortex)
-![CurseForge Downloads](https://img.shields.io/curseforge/dt/856138?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fvortex)
+![CurseForge Downloads](https://img.shields.io/curseforge/dt/973580?logo=curseforge&color=red&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fvortex)
 
 *The Vortex Manipulator - Save three waypoints and use them six times.*
 
